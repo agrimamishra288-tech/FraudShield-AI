@@ -21,6 +21,9 @@ for img_name in os.listdir(real_path):
     img = cv2.imread(img_path)
     if img is not None:
         img = cv2.resize(img, (IMG_SIZE, IMG_SIZE))
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        img = cv2.Canny(img, 100, 200)
+
         img = img.flatten()  # Convert image to 1D array
         data.append(img)
         labels.append(0)
@@ -31,6 +34,8 @@ for img_name in os.listdir(fake_path):
     img = cv2.imread(img_path)
     if img is not None:
         img = cv2.resize(img, (IMG_SIZE, IMG_SIZE))
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        img = cv2.Canny(img, 100, 200)
         img = img.flatten()
         data.append(img)
         labels.append(1)
@@ -55,6 +60,7 @@ accuracy = accuracy_score(y_test, y_pred)
 print("Model Accuracy:", accuracy)
 
 # Save model
+os.makedirs("../saved_model", exist_ok=True)
 joblib.dump(model, "../saved_model/deepfake_model.pkl")
 
 print("Model saved successfully!")
